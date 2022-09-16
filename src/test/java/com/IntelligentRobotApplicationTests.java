@@ -19,9 +19,12 @@ class IntelligentRobotApplicationTests {
     RedisTemplate redisTemplate;
     @Autowired
     HttpConfigure httpConfigure;
+    @Autowired
+    RedisTools redisTools;
     @Test
     void contextLoads1() {
-        redisTemplate.opsForValue().set("user","ka3212");
+       redisTemplate.opsForValue().increment("user",1);
+
     }
     @Test
     void contextLoads2() {
@@ -40,12 +43,13 @@ class IntelligentRobotApplicationTests {
 
     @Test
     void contextLoads5() {
-
+//        redisTemplate.opsForValue().increment("次数");
+        System.out.println(redisTools.get("次2"));
 
     }
     @Test
     void contextLoads6() {
-
+        redisTemplate.opsForValue().set("次2",1,7*60l);
     }
 
 

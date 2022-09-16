@@ -12,7 +12,9 @@ import love.forte.simbot.annotation.FilterValue;
 import love.forte.simbot.annotation.OnGroup;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.sender.MsgSender;
+import love.forte.simbot.filter.AtDetection;
 import love.forte.simbot.filter.MatchType;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class GroupListener implements com.ListenerInterface.GroupListener {
     @Override
     public void SearchChoose(GroupMsg groupMsg, MsgSender msgSender,@FilterValue("search") String search) {
          String Url=""; JSONObject jsonObject ;
-         switch (redisTools.GetString("Type")){
+         switch ((String) redisTools.GetString("Type")){
              case "歌曲":
                  try {
                      jsonObject= configure.run(redisTools.get("Url") + "&n=" + search).getJSONObject("data");
@@ -213,7 +215,6 @@ public class GroupListener implements com.ListenerInterface.GroupListener {
             throw new RuntimeException(e);
         }finally {
             String Str="";
-            System.out.println(run.getString("msg")+"火影忍者" );
             if(run.getString("msg").length()<=4){
                 redisTools.SetString("Type","电影");
                 redisTools.SetString("Url",Url);
@@ -233,6 +234,82 @@ public class GroupListener implements com.ListenerInterface.GroupListener {
     @Override
     public void dogLicking(GroupMsg privateMsg, MsgSender sender) {
      sender.SENDER.sendGroupMsg(privateMsg,configure.GetReptileString(allInterfaces.getDogLicking(),3));
+    }
+    @Async
+    @Filter(value = "help",matchType = MatchType.STARTS_WITH)
+    @Override
+    public void Help(GroupMsg privateMsg, MsgSender sender) {
+        String Help="----------          菜单          ----------"+"\n"+" 1        图片          "+"\n"+"2        搜歌 "+"\n"+
+                "3        日记 "+"\n"+"4        (追加城市)疫情"+"\n"+
+                "5        (追加城市)天气" +"\n"+
+                "6        截图(后面追加网站)" +"\n"+
+                "7        电影(功能暂时不稳定) " +"\n"+
+                "8        60(新闻) " +"\n"+
+                "9        csdn(后面追加内容) " +"\n"+
+                "10       多实战 " +"\n"+
+                "11       翻译(翻译内容) " +"\n"+
+                "12       生成(后面追加内容，将文本转换二维码) 详细：-为选择，例如第一首歌曲就是 -1！ 电影 选择方式为 -11  前面第一个1为列表 中第一个而第二个1是第一集     图片类型则有古风 美女 美腿 二次元 cosplay 后面追加数字则是发送几张，切记最大一次性最多5张";
+        sender.SENDER.sendGroupMsg(privateMsg,Help);
+    }
+
+    @Async
+    @Filter(value = "拍拍",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "高质量",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "膜拜",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "撕",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "遗照",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "警官证",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "光棍证",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "老司机",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "屌丝证",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "帅哥证",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "高富帅证",matchType = MatchType.STARTS_WITH)
+    @Filter(value = "全群最帅",matchType = MatchType.STARTS_WITH)
+    @Override
+    public void Emoji(GroupMsg privateMsg, MsgSender sender) {
+        String Url="";
+      switch (privateMsg.getMsg().toString()){
+          case "拍拍":Url=allInterfaces.getTouch();break;
+          case "高质量":Url=allInterfaces.getHighQuality();break;
+          case "膜拜":Url=allInterfaces.getWorship();break;
+          case "撕":Url= allInterfaces.getRip();break;
+          case "遗照":Url=allInterfaces.getPosthumousPhoto();break;
+          case "光棍证":Url=allInterfaces.getBachelor();break;
+          case "老司机":Url=allInterfaces.getDriver();break;
+          case "屌丝证":Url=allInterfaces.getDiaoSi();break;
+          case "高富帅证":Url=allInterfaces.getHandsomeGuy();break;
+          case "帅哥":Url=allInterfaces.getHandsome();break;
+          case "全群最帅":Url=allInterfaces.getMostHandsome();break;
+      }
+        sender.SENDER.sendGroupMsg(privateMsg,catCode.CatPicture(Url+privateMsg.getAccountInfo().getAccountCode()));
+    }
+    @OnGroup()
+    @Async
+    @Override
+    public void chatWith(GroupMsg privateMsg, MsgSender sender,AtDetection atDetection) {
+        if(atDetection.atBot()){
+        try {
+            System.out.println(privateMsg.getText());
+            JSONObject run = configure.run(allInterfaces.getWoodenFish() + privateMsg.getText());
+            String replace = run.get("text").toString().replace("小源", "小木鱼").replace("男", "女");
+            sender.SENDER.sendGroupMsg(privateMsg,replace);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }}
+    }
+    @Filter(value = "绿茶",matchType = MatchType.STARTS_WITH)
+    @Override
+    public void greenTea(GroupMsg privateMsg, MsgSender sender) {
+        sender.SENDER.sendGroupMsg(privateMsg,catCode.voiceCat(allInterfaces.getGreenTea()));
+    }
+    @Filter(value = "表情包菜单",matchType = MatchType.STARTS_WITH)
+    @Async
+    @Override
+    public void CertificateEmoji(GroupMsg groupMsg, MsgSender sender) {
+        String CertificateEmoji="----------          表情包菜单           ---------\n"+
+                "1. 拍拍\n"+"2. 高质量\n"+"3. 膜拜\n"+"4. 警官证\n"+"5. 光棍证\n"+"6. 老司机证\n"
+                +"7. 屌丝证\n"+"8. 帅哥证\n"+"9. 高富帅证\n"+"10. 全群最帅\n";
+        sender.SENDER.sendGroupMsg(groupMsg,CertificateEmoji);
     }
 
 

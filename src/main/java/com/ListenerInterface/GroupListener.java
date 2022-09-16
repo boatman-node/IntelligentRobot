@@ -3,6 +3,7 @@ package com.ListenerInterface;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.sender.MsgSender;
 import love.forte.simbot.api.sender.Sender;
+import love.forte.simbot.filter.AtDetection;
 
 
 public interface GroupListener {
@@ -21,5 +22,10 @@ public interface GroupListener {
     void  csDnApi(GroupMsg privateMsg, MsgSender sender,String Msg);
     void  Movie(GroupMsg privateMsg, MsgSender sender,String Msg);
     void  dogLicking(GroupMsg privateMsg, MsgSender sender);
+    void  Help(GroupMsg privateMsg, MsgSender sender);
+    void  Emoji(GroupMsg privateMsg, MsgSender sender);
+    void  chatWith(GroupMsg privateMsg, MsgSender sender, AtDetection atDetection);
+    void greenTea(GroupMsg privateMsg, MsgSender sender);
+    void CertificateEmoji(GroupMsg groupMsg,MsgSender sender);
 
 }

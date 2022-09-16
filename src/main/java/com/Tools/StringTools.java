@@ -6,10 +6,9 @@ import javax.annotation.Resource;
 
 @Component
 public class StringTools {
-    public String getMenu(){
+    public int UUid(){
+return 1;
 
-        return "1           help！"+"\n"+
-                "1           help！"+"\n";
     }
 
 }

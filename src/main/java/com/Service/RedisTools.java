@@ -20,6 +20,13 @@ public class RedisTools<T> {
     public void SetString(String Key,Object Value){
         redisTemplate.opsForValue().set(Key,Value);
     }
+    /**
+     * 修改数据
+     *
+     * **/
+    public void ChangeString(String Key,T Value){
+        redisTemplate.opsForValue().getAndSet(Key,Value);
+    }
 
     public boolean isBlank(String Key){
       return redisTemplate.hasKey(Key);
@@ -99,7 +106,7 @@ public class RedisTools<T> {
      * @param expire
      * @return
      */
-    public boolean set(final String key, String value, Long expire){
+    public boolean set(final String key, T value, Long expire){
         boolean result = false;
         try {
             ValueOperations operations = redisTemplate.opsForValue();
